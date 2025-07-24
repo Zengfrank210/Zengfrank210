@@ -1,36 +1,510 @@
-# This is a basic workflow to help you get started with Actions
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社群時代的投資智慧：互動式報告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral & Olive -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling application divided into five thematic sections, mimicking the author's journey of discovery. A sticky navigation bar allows for easy travel between sections. The structure is designed to be narrative-driven: 1. Prologue (setting the scene), 2. Creator Spectrum (interactive exploration of the ecosystem), 3. Double-Edged Sword (comparison of pros and cons), 4. ETF as Core Strategy (exploring modern investment trends), and 5. Survival Guide (actionable philosophy and takeaways). This non-linear but guided flow enhances usability by allowing users to explore topics based on interest while maintaining a clear narrative arc. -->
+    <!-- Visualization & Content Choices: The report's qualitative data is transformed into interactive components. Creator Types -> Goal: Organize/Compare -> Viz: Interactive cards with risk/trust ratings and a summary bar chart (Chart.js) -> Interaction: Click to reveal details -> Justification: Encourages exploration and provides quick visual summaries. Pros/Cons -> Goal: Compare -> Viz: Two-column layout with icons -> Interaction: Static comparison -> Justification: Clear, direct comparison. Key Learnings -> Goal: Inform/Highlight -> Viz: Stylized "insight cards" -> Justification: Emphasizes key takeaways. Due Diligence Checklist -> Goal: Engage/Action -> Viz: Interactive HTML checklist -> Interaction: Clickable checkboxes -> Justification: Turns passive reading into an active, memorable task. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF7;
+            color: #3D405B;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #81B29A;
+        }
+        .nav-link.active {
+            color: #81B29A;
+            border-bottom-color: #81B29A;
+        }
+        .creator-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .creator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-backdrop {
+            transition: opacity 0.3s;
+        }
+        .modal-content {
+            transition: transform 0.3s, opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="antialiased">
 
-name: CI
+    <header id="main-header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#3D405B]">投資智慧之旅</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#prologue" class="nav-link text-gray-600 border-b-2 border-transparent">序章</a>
+                <a href="#spectrum" class="nav-link text-gray-600 border-b-2 border-transparent">創作者光譜</a>
+                <a href="#double-edge" class="nav-link text-gray-600 border-b-2 border-transparent">雙面刃</a>
+                <a href="#etf-strategy" class="nav-link text-gray-600 border-b-2 border-transparent">ETF核心策略</a>
+                <a href="#philosophy" class="nav-link text-gray-600 border-b-2 border-transparent">我的生存法則</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md p-2">
+                    <option value="#prologue">序章</option>
+                    <option value="#spectrum">創作者光譜</option>
+                    <option value="#double-edge">雙面刃</option>
+                    <option value="#etf-strategy">ETF核心策略</option>
+                    <option value="#philosophy">我的生存法則</option>
+                </select>
+            </div>
+        </nav>
+    </header>
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    <main>
+        <section id="prologue" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">社群時代的投資智慧</h2>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">從多元資訊到建立個人核心策略</p>
+                <div class="mt-12 text-left max-w-3xl mx-auto space-y-4 text-gray-700 leading-relaxed">
+                    <p>作為一位大學生與網路原住民，在追求複利與財富自由的道路上，社群平台與影音媒體已成為我獲取投資資訊的重要管道。受到財經網紅宣傳的FIRE運動，以及周冠男教授的長期買進理念推波助瀾，我開始關注台灣股市，並主動學習投資相關知識、技巧、工具。</p>
+                    <p>然而，在這個資訊爆炸的時代，隨手打開IG、YouTube或各大論壇，就有數不清的「財經達人」在講長期持有、ETF、資產配置，有時也讓我在社群探索中迷失自己，分不清楚自己是在賭博、投機還是投資。我越來越警覺：<strong class="text-[#E07A5F]">真正能在市場中站穩腳步的，不是懂得最多的人，而是懂得過濾與思考的人。</strong></p>
+                </div>
+            </div>
+        </section>
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+        <section id="spectrum" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">創作者光譜</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">在資訊的洪流中，誰在對你說話？點擊卡片查看詳細分析，了解不同類型創作者的特點、風險與我個人的偏好。</p>
+                </div>
+                <div id="creator-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+                <div class="mt-20 text-center">
+                    <h3 class="text-2xl font-bold mb-4 text-[#3D405B]">我的創作者偏好</h3>
+                    <p class="text-gray-600 max-w-2xl mx-auto mb-8">基於我的學習與觀察，我對不同類型的創作者有明顯的偏好，這反映在我尋求資訊的傾向上。下圖視覺化了我對各類創作者的信任與關注程度。</p>
+                    <div class="chart-container">
+                        <canvas id="preferenceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+        <section id="double-edge" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">社群媒體的雙面刃</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">社群媒體為投資學習帶來前所未有的便利，但也伴隨著顯著的挑戰與陷阱。了解其優劣，是建立獨立思考的第一步。</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div id="advantages-section" class="bg-green-50 p-8 rounded-lg border border-green-200">
+                        <h3 class="text-2xl font-bold text-green-800 mb-6 flex items-center">
+                            <span class="text-3xl mr-3">👍</span> 優勢
+                        </h3>
+                        <ul class="space-y-4 text-green-700"></ul>
+                    </div>
+                    <div id="disadvantages-section" class="bg-red-50 p-8 rounded-lg border border-red-200">
+                        <h3 class="text-2xl font-bold text-red-800 mb-6 flex items-center">
+                            <span class="text-3xl mr-3">👎</span> 挑戰與陷阱
+                        </h3>
+                        <ul class="space-y-4 text-red-700"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+        <section id="etf-strategy" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">投資大盤ETF：新世代的核心策略與時代價值觀</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">對於我們這個世代而言，投資大盤ETF已逐漸成為理財規劃中的「標配」與核心策略。這不僅是操作層面的轉變，更反映出一種時代價值觀的改變。</p>
+                </div>
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-8 text-[#3D405B]">核心信念：四大投資觀的建立</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <div class="text-4xl mb-4">📈</div>
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">接受平庸，擁抱市場報酬</h4>
+                            <p class="text-gray-600 text-sm">根據歷史數據，90%以上的專業經理人長期無法擊敗大盤。對我而言，與其執著於選股或擇時，不如直接買下整個市場，以更穩定、更省力的方式獲取平均報酬（年化約 $6\%$ 至 $10\%$）。這是一種務實、有效率的策略，背後蘊含的是我對風險與機率的深刻理解。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <div class="text-4xl mb-4">💰</div>
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">複利是致富的唯一途徑</h4>
+                            <p class="text-gray-600 text-sm">在薪資成長趨緩、房價高漲的「大停滯時代」，單靠儲蓄已難以累積足夠資產。因此，我們這一代年輕人將希望寄託於「時間」與「複利」的力量。「越早開始越好」成為共識，即便每月僅投入數千元，只要持之以恆、善用時間，資產最終仍可能達到可觀規模。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <div class="text-4xl mb-4">📉</div>
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">成本決定一切</h4>
+                            <p class="text-gray-600 text-sm">深受Vanguard創辦人John Bogle「成本至上」思想影響，我對投資成本極為敏感。我深知，每年 $1\%$ 至 $2\%$ 的費用差異，在三、四十年的投資期間中，將對最終報酬造成顯著影響。因此，在選擇ETF時，管理費用（總開銷比）成為我首要考量。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                            <div class="text-4xl mb-4">🤖</div>
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">紀律與自動化</h4>
+                            <p class="text-gray-600 text-sm">「人性是投資最大的敵人」——這句話對我而言已非新知。我逐漸放棄「憑感覺進場」的投資方式，轉而透過券商的「定期定額」功能實現自動化操作。固定時間、固定金額、長期投入，這種「Dollar-Cost Averaging（DCA）」策略有效攤平成本，也降低情緒波動所帶來的決策錯誤風險。</p>
+                        </div>
+                    </div>
+                </div>
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-8 text-[#3D405B]">時代背景：為何ETF成為主流？</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">資訊普及與透明化</h4>
+                            <p class="text-gray-600 text-sm">如今透過YouTube、Podcast、PTT、Dcard等平台，我能輕易接觸到以投資人利益為出發點的內容。這些資訊常比金融業的銷售話術更中立、實用，促使「指數化投資」與「被動投資」快速普及。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">金融科技（Fintech）降低門檻</h4>
+                            <p class="text-gray-600 text-sm">智能投資顧問、網路券商與行動App的普及，大幅降低了投資的門檻。從開戶、下單、設定定期扣款，到檢視報酬率，整個投資流程幾乎像訂閱制服務一樣簡單直觀。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">對傳統金融體系的懷疑</h4>
+                            <p class="text-gray-600 text-sm">歷經2008年金融海嘯與多次市場危機，我對傳統金融機構所販售的高費用、不透明產品產生根本性的懷疑。我傾向選擇簡單、透明、低成本、數據支持的投資策略。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">FIRE運動的推波助瀾</h4>
+                            <p class="text-gray-600 text-sm">「財務自由，提早退休」的FIRE理念已在年輕族群間廣為流行。其核心策略就是：極大化儲蓄率，並投入低費用的大盤ETF。ETF不只是投資工具，更是實現人生選擇權的一部分。</p>
+                        </div>
+                    </div>
+                </div>
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+                <div>
+                    <h3 class="text-2xl font-bold text-center mb-8 text-[#3D405B]">挑戰與反思：ETF真的無懈可擊嗎？</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">「無聊」的誘惑</h4>
+                            <p class="text-gray-600 text-sm">ETF報酬穩健卻缺乏刺激。加密貨幣、Meme股、期權槓桿等資產類別，以高波動性與暴富神話吸引投機資金。我雖然以ETF為核心配置，但同時會撥出部分資金進行高風險操作，以尋求短期快感與超額報酬。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 class="text-lg font-bold mb-2 text-[#3D405B]">同溫層效應與過度自信</h4>
+                            <p class="text-gray-600 text-sm">當所有資訊來源都傾向同一種投資哲學，容易導致觀點單一、缺乏批判思維。特別是對「市場永遠向上」的盲目信仰，可能忽略長期盤整或熊市對投資心理與財務規劃的衝擊。指數化投資雖好，但也需要風險管理與彈性調整的能力。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="philosophy" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#3D405B]">我的生存法則</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">在資訊叢林中穿梭後，我沉澱出屬於自己的投資哲學、學習體悟與盡職調查清單。這是我航行的羅盤。</p>
+                </div>
+                
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-8 text-[#3D405B]">我在投資學習中的四大體悟</h3>
+                    <div id="insights-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-center mb-8 text-[#3D405B]">我的盡職調查清單 (Due Diligence)</h3>
+                    <div id="checklist-container" class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                    </div>
+                </div>
+                
+                <div class="mt-16 text-center max-w-3xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-4 text-[#3D405B]">最終的體悟</h3>
+                    <p class="text-gray-700 leading-relaxed">投資的路上可以參考別人的腳步，但不能放棄自己的思考。社群上的資訊再多，終究只是他人的看法與選擇。若想在股市中長久生存，靠的不是消息靈通，而是理性思維與紀律實踐。持續閱讀經典著作、紀錄交易邏輯、反覆驗證自己的決策體系，才是我認為真正值得走的路。投資是一場沒有終點的學習旅程，保持開放的心態，不斷學習、反思和調整，才能在這個充滿變化的市場中穩步前行，最終實現財務目標。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 社群時代的投資智慧。僅供學習與交流，不構成任何投資建議。</p>
+        </div>
+    </footer>
+
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden modal-backdrop">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto modal-content scale-95 opacity-0">
+            <div class="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+                <h3 id="modal-title" class="text-2xl font-bold"></h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6 space-y-4">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = {
+                creators: [
+                    {
+                        id: 1,
+                        title: "獨立投資見解與經驗分享者",
+                        summary: "真誠記錄自身操作，分享投資哲學與風險管理，是我最欣賞的一類。",
+                        details: "這類創作者包含獨立投資者，他們真誠記錄自身對帳單、交易邏輯、操作策略、投資觀點及閱讀心得，內容往往具個人風格，無意營利，僅作為個人學習與反思的紀錄。同時，也涵蓋了在市場累積多年實戰經驗並取得穩定獲利的專職投資人或資深交易者，他們可能透過出版書籍、舉辦講座等方式，分享長年穩定交易獲利的經驗與智慧，內容更注重投資哲學、風險管理與心態建設。這兩者共同的特點是其內容的真實性與非商業性。",
+                        risk: "low",
+                        preference: 10
+                    },
+                    {
+                        id: 2,
+                        title: "市值型ETF推廣者與存股投資人",
+                        summary: "秉持長期主義，主張買進整個市場，強調時間複利，是我十分認同的理念。",
+                        details: "他們秉持長期主義，主張買進整個市場（透過市值型ETF）或選擇優質標的進行長期存股。這類創作者強調時間複利的巨大力量，以緩慢但穩健的方式累積資產。",
+                        risk: "low",
+                        preference: 9
+                    },
+                    {
+                        id: 3,
+                        title: "專業知識與深度內容提供者",
+                        summary: "包含專欄作家、Podcaster、學者型研究員，內容具系統性、專業性與深度。",
+                        details: "此類包含具備深厚金融知識與實戰經驗的專欄作家、專職投資人與資訊平台合作者，他們透過訂閱制平台提供深度內容。此外，也包括多以音頻形式呈現內容的Podcaster，他們從宏觀角度解析全球經濟脈動。以及具備頂尖學府學歷背景、在特定產業或公司有深入研究的學者型研究員，他們長於深入分析個股與產業邏輯，觀點基於嚴謹的數據分析與學術理論。",
+                        risk: "low",
+                        preference: 8
+                    },
+                    {
+                        id: 4,
+                        title: "商業導向的市場分析與推廣者",
+                        summary: "包含證券營業員與投顧老師，需警惕其背後的商業目的與潛在利益衝突。",
+                        details: "這類創作者包括證券營業員，其內容多圍繞市場熱門族群分析，主要目的在於吸引潛在客戶。同時也包括投顧老師，其內容往往帶有強烈個人風格與戲劇性，誘導觀眾加入高額會員群組以換取會員費用。這類內容需特別警惕其商業目的與潛在誤導性。",
+                        risk: "medium",
+                        preference: 3
+                    },
+                    {
+                        id: 5,
+                        title: "財經知識普及與生活風格分享者",
+                        summary: "擅長簡化知識，兼具教育與娛樂性，但也可能涉及業配合作。",
+                        details: "這類創作者擅長將艱澀金融知識簡化，透過故事與案例吸引普羅大众。其中也包含財務自由型YouTuber，他們分享如何透過理財規劃、投資策略逐步達成財務自由，並以此發展業配合作。",
+                        risk: "medium",
+                        preference: 5
+                    },
+                    {
+                        id: 6,
+                        title: "高風險交易策略分享者",
+                        summary: "包含當沖客與加密貨幣交易者，內容刺激但凸顯高風險與高技術要求。",
+                        details: "此類包括追求日內交易快速獲利的當沖客，他們經常貼出每日對帳單。同時也涵蓋了加密貨幣交易者，他們經常發布技術分析圖，分享進出場點位，並強調紀律與風險控管的重要性。",
+                        risk: "high",
+                        preference: 2
+                    },
+                    {
+                        id: 7,
+                        title: "投資詐騙集團",
+                        summary: "最具風險，假冒名師推薦飆股，誘導投資者進入陷阱，需極力警惕。",
+                        details: "這類型最具風險，也是最需要警惕的。他們常假冒「名師」，以誇大不實的獲利數字或「推薦飆股」為名，吸引群眾加入群組並進行不當操作。判斷方式包括：缺乏清楚個人資歷、粉絲追蹤數異常虛高、以及以「限時免費」等煽動性術語博眼球。",
+                        risk: "critical",
+                        preference: 0
+                    }
+                ],
+                advantages: [
+                    "打破資訊壁壘與多元視角",
+                    "即時資訊交流與經驗學習",
+                    "金融知識普及與社群連結"
+                ],
+                disadvantages: [
+                    "資訊過載與噪音",
+                    "認知偏誤的放大",
+                    "缺乏監管與專業責任",
+                    "資訊片面性與情緒煽動",
+                    "「免費的最貴」與缺乏風險警示"
+                ],
+                insights: [
+                    { title: "資訊重質不重量", content: "市面上的投資資訊大多是簡化後的普遍觀點，對進階實戰幫助有限。真正有價值的資訊需要深層挖掘與判斷。", icon: "🎯" },
+                    { title: "高手通常很低調", content: "真正『有料』的操盤手大多不走大眾化路線。不起眼的帳號或冷門社群，才藏著第一手的產業觀察與操作邏輯。", icon: "🤫" },
+                    { title: "數據規律勝於口號", content: "與其聽『克服人性』的口號，不如尋找將人性模式數據化、用統計回測市場情緒的量化分析方法。", icon: "📊" },
+                    { title: "人多的地方不要去", content: "當一個題材爆紅，代表市場已趨於效率。與其跟風，不如訓練自己辨別『還沒被說出口』的趨勢。", icon: "👣" }
+                ],
+                checklist: [
+                    "判斷發布者專業背景與信譽，了解其是否有利益衝突。",
+                    "多方交叉驗證，參考權威媒體、券商報告、公司財報等。",
+                    "深入理解分析邏輯和假設，判斷推論是否合理、數據是否支持。",
+                    "確保任何投資都與個人的財務目標、資金狀況和風險偏好相匹配。"
+                ]
+            };
+
+            const riskStyles = {
+                low: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-500', label: '低風險' },
+                medium: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-500', label: '中等風險' },
+                high: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-500', label: '高風險' },
+                critical: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-500', label: '極高風險' }
+            };
+
+            const creatorGrid = document.getElementById('creator-grid');
+            data.creators.forEach(creator => {
+                const style = riskStyles[creator.risk];
+                const card = document.createElement('div');
+                card.className = `creator-card cursor-pointer bg-white p-6 rounded-lg shadow-md border-l-4 ${style.border}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-800">${creator.title}</h3>
+                        <span class="text-xs font-semibold px-2 py-1 ${style.bg} ${style.text} rounded-full">${style.label}</span>
+                    </div>
+                    <p class="text-gray-600">${creator.summary}</p>
+                `;
+                card.addEventListener('click', () => openModal(creator));
+                creatorGrid.appendChild(card);
+            });
+            
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const closeModalBtn = document.getElementById('close-modal');
+
+            function openModal(creator) {
+                modalTitle.textContent = creator.title;
+                modalBody.innerHTML = `<p class="text-gray-700 leading-relaxed">${creator.details}</p>`;
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.querySelector('.modal-content').classList.remove('scale-95', 'opacity-0');
+                    modal.querySelector('.modal-content').classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closeModal() {
+                modal.querySelector('.modal-content').classList.add('scale-95', 'opacity-0');
+                modal.querySelector('.modal-content').classList.remove('scale-100', 'opacity-100');
+                modal.classList.add('opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            const advantagesList = document.querySelector('#advantages-section ul');
+            data.advantages.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start';
+                li.innerHTML = `<span class="mr-3 text-green-600">✓</span><span>${item}</span>`;
+                advantagesList.appendChild(li);
+            });
+
+            const disadvantagesList = document.querySelector('#disadvantages-section ul');
+            data.disadvantages.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start';
+                li.innerHTML = `<span class="mr-3 text-red-600">✗</span><span>${item}</span>`;
+                disadvantagesList.appendChild(li);
+            });
+            
+            const insightsGrid = document.getElementById('insights-grid');
+            data.insights.forEach(insight => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-lg shadow-lg text-center';
+                card.innerHTML = `
+                    <div class="text-4xl mb-4">${insight.icon}</div>
+                    <h4 class="text-lg font-bold mb-2 text-[#3D405B]">${insight.title}</h4>
+                    <p class="text-gray-600 text-sm">${insight.content}</p>
+                `;
+                insightsGrid.appendChild(card);
+            });
+
+            const checklistContainer = document.getElementById('checklist-container');
+            data.checklist.forEach((item, index) => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center p-4 rounded-md transition-colors duration-200 hover:bg-gray-50 cursor-pointer';
+                label.innerHTML = `
+                    <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[#81B29A] focus:ring-[#81B29A]">
+                    <span class="ml-4 text-gray-700">${item}</span>
+                `;
+                checklistContainer.appendChild(label);
+            });
+            
+            const ctx = document.getElementById('preferenceChart').getContext('2d');
+            const chartData = data.creators.sort((a, b) => b.preference - a.preference);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.map(c => c.title.split('與')[0]),
+                    datasets: [{
+                        label: '個人偏好程度',
+                        data: chartData.map(c => c.preference),
+                        backgroundColor: 'rgba(129, 178, 154, 0.6)',
+                        borderColor: 'rgba(129, 178, 154, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '偏好程度 (越高越偏好)'
+                            }
+                        },
+                        y: {
+                           ticks: {
+                                autoSkip: false
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+            
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.addEventListener('change', (e) => {
+                window.location.hash = e.target.value;
+            });
+        });
+    </script>
+</body>
+</html>
+
